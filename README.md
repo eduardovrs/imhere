@@ -2,12 +2,12 @@
   <a rel="noopener" target="_blank"><img width="300" src="./src/assets/Logo.png" alt="imhere"></a>
 </p>
 
-**imhere** app for events and participants list.
+**imhere** is an app that allows it's users to create an event and add or remove guests on a list.
 
 <div align="center">
 
 ![TypeScript](https://img.shields.io/badge/typescript%20-%23007ACC.svg?&style=for-the-badge&logo=typescript&logoColor=white)
-![React](https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![ReactNative](https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
 </div>
 
