@@ -1,6 +1,6 @@
 import {format} from 'date-fns';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Alert, FlatList, ScrollView, View} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {FlatList, ScrollView} from 'react-native';
 import ParticipantRemove from '../../components/ParticipantsRemove';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
@@ -15,7 +15,6 @@ import {
   Icon,
 } from './styles';
 const dataKey = '@imhere:participants';
-
 interface IParticipants {
   name: string;
   id: string;
@@ -28,17 +27,15 @@ const Participants = ({route, navigation}) => {
   const randomId = String(Math.floor(1000000 + Math.random() * 999999));
   const [data, setData] = useState<IParticipants[]>([]);
   const [asyncInfo, setAsyncInfo] = useState<IParticipants[]>([]);
+  const [teste, setTeste] = useState('');
 
   async function addNewParticipant() {
-    const hasSomeFuckingShit = participants.some((item, index) => {
-      console.log(item.name, participantName);
-      participants[index].name === participantName;
+    const verifyParticipantName = asyncInfo.some(item => {
+      return item.name === participantName;
     });
 
-    console.log(hasSomeFuckingShit);
-
-    if (hasSomeFuckingShit) {
-      return Toast.show('Já tem coisa ai maluco!');
+    if (verifyParticipantName) {
+      return Toast.show('Já existe um participante com esse nome');
     }
 
     if (!participantName) {
@@ -49,6 +46,7 @@ const Participants = ({route, navigation}) => {
       id: randomId,
       name: participantName,
     };
+
     setParticipants(prevState => [...prevState, tempObj]);
     setParticipantName('');
 
@@ -74,27 +72,7 @@ const Participants = ({route, navigation}) => {
 
   useEffect(() => {
     getAsyncParticipants();
-    //     LIMPAR O ASYNCSTORAGE
-    // async function removeAllEvents() {
-    //   await AsyncStorage.removeItem(dataKey);
-    // }
-    // removeAllEvents();
   }, [getAsyncParticipants, state]);
-
-  // function removeParticipant(name: string) {
-  //   Alert.alert('Remover', `Deseja remover o participante ${name}?`, [
-  //     {
-  //       text: 'Sim',
-  //       onPress: () =>
-  //         setParticipants(prevState =>
-  //           prevState.filter(participant => participant !== name),
-  //         ),
-  //     },
-  //     {
-  //       text: 'Não',
-  //     },
-  //   ]);
-  // }
 
   const removeAsyncParticipants = useCallback(
     async (id: string) => {
@@ -103,9 +81,9 @@ const Participants = ({route, navigation}) => {
       const removeParticipant = previousData.filter(
         (participant: IParticipants) => participant.id !== id,
       );
+      setState(!state);
       await AsyncStorage.setItem(dataKey, JSON.stringify(removeParticipant));
       setData(removeParticipant);
-      setState(!state);
     },
     [state],
   );
@@ -121,7 +99,9 @@ const Participants = ({route, navigation}) => {
               <ParticipantRemove
                 id={item.id}
                 name={item.name}
-                onRemove={() => removeAsyncParticipants(item.id)}
+                onRemove={() => {
+                  removeAsyncParticipants(item.id);
+                }}
               />
             </ScrollView>
           );

@@ -5,15 +5,12 @@ import React, {
   useState,
   useContext,
 } from 'react';
-import {
-  Alert,
-  FlatList,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {FlatList, ScrollView, TouchableOpacity} from 'react-native';
 import EventRemove from '../../components/EventsRemove';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-simple-toast';
+import DatePicker from 'react-native-date-picker';
+import {format} from 'date-fns';
 import {
   Container,
   Title,
@@ -25,9 +22,6 @@ import {
   DateButton,
   DateButtonText,
 } from './styles';
-import DatePicker from 'react-native-date-picker';
-import {format} from 'date-fns';
-
 interface IEvents {
   name: string;
   date: string;
@@ -42,8 +36,8 @@ const Events = ({navigation}) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<IEvents[]>([]);
   const randomId = String(Math.floor(1000000 + Math.random() * 999999));
-  const dataKey = '@imhere:events';
   const [asyncInfo, setAsyncInfo] = useState<IEvents[]>([]);
+  const dataKey = '@imhere:events';
 
   const getAsyncItems = useCallback(async () => {
     const result = await AsyncStorage.getItem(dataKey);
@@ -59,11 +53,16 @@ const Events = ({navigation}) => {
   }, [getAsyncItems, state]);
 
   async function addNewEvent() {
+    const verifyEventName = asyncInfo.some(item => {
+      return item.name === eventName;
+    });
+
+    if (verifyEventName) {
+      return Toast.show('Já existe um evento com esse nome.');
+    }
+
     if (!eventName) {
-      return Alert.alert(
-        'Erro',
-        'Não é possível adicionar um evento sem nome.',
-      );
+      return Toast.show('Não é possível adicionar um evento sem nome.');
     }
     const tempObj = {
       id: randomId,
@@ -98,12 +97,6 @@ const Events = ({navigation}) => {
     },
     [state],
   );
-
-  //   // LIMPAR O ASYNCSTORAGE
-  // async function removeAllEvents() {
-  //   await AsyncStorage.removeItem(dataKey);
-  // }
-  // removeAllEvents();
 
   const renderAsyncItems = useMemo(() => {
     return (
