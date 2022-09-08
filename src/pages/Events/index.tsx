@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useContext,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {FlatList, ScrollView, TouchableOpacity} from 'react-native';
 import EventRemove from '../../components/EventsRemove';
 import AsyncStorage from '@react-native-async-storage/async-storage';

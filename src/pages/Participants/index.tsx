@@ -14,7 +14,7 @@ import {
   BackButton,
   Icon,
 } from './styles';
-const dataKey = '@imhere:participants';
+
 interface IParticipants {
   name: string;
   id: string;
@@ -28,6 +28,7 @@ const Participants = ({route, navigation}) => {
   const [data, setData] = useState<IParticipants[]>([]);
   const [asyncInfo, setAsyncInfo] = useState<IParticipants[]>([]);
   const [teste, setTeste] = useState('');
+  const dataKey = '@imhere:participants';
 
   async function addNewParticipant() {
     const verifyParticipantName = asyncInfo.some(item => {
